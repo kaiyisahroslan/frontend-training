@@ -1,31 +1,23 @@
-/* eslint-disable jsx-a11y/alt-text */
-/* eslint-disable jsx-a11y/anchor-is-valid */
 import * as React from "react";
 import { useEffect, useState } from "react";
+import { countryStore } from "../stores/countryStore";
+import { CountryDetails } from "./countryTypes";
 
-export interface ICountryCard {
-  name: string;
-  common: string;
-  population: string;
-  region: string;
-  capital: string;
-  flags: any;
-}
-
-export const CountryCard = (props: ICountryCard) => {
+export const CountryCard = (props: CountryDetails) => {
   const { name, common, population, region, capital, flags } = props;
 
   const [countries, setCountries] = useState([]);
 
   const fetchCountryData = async () => {
-    const response = await fetch('https://restcountries.com/v3.1/all');
-    const countries = await response.json();
-    setCountries(countries);
-    console.log(countries);
+    setCountries(countryStore.countryDetailsData as any);
   };
 
   useEffect(() => {
+    (async ()=>{
+      await countryStore.fetchCountryData()
     fetchCountryData();
+    })(); // () - IIFE
+
   }, []);
 
   return (
@@ -40,7 +32,7 @@ export const CountryCard = (props: ICountryCard) => {
               <div className="card-body p-5">
                 <h2 className="card-title">
                   <a
-                    href="countryPage"
+                    href={name.common}
                     className="text-gray-900 font-bold text-lg mb-2 hover:text-indigo-600 inline-block"
                   >
                     {name.common}

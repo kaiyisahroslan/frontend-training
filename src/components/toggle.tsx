@@ -1,12 +1,22 @@
 import * as React from "react";
+import { useState } from "react";
 
-export function Toggle() {
+export const Toggle = (props: any) => {
+
+  const [toggle, setToggle] = useState(false as boolean);
+  const handleClick = () => {
+    setToggle(!toggle)
+    console.log(toggle)
+  };
+  
   return (
-    <label className="relative mb-5 cursor-pointer items-end">
-      <input type="checkbox" value="" className="peer sr-only" />
-      <div className="peer h-5 w-9 rounded-full bg-gray-400 after:absolute after:top-[2px] after:left-[2px] after:h-4 after:w-4 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-indigo-900 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-200"></div>
-    </label>
+    <div className="content-center">
+      <label className="inline-flex items-center cursor-pointer">
+        <input type="checkbox" value={props.toggleSwitch} className="sr-only peer" onChange={handleClick}/>
+        <div className="font-medium text-gray-500"> Table </div>
+        <div className="ms-3 relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+        <div className="ms-3 font-medium text-gray-500"> Card </div>
+      </label>
+    </div>
   );
 }
-
-export default Toggle;

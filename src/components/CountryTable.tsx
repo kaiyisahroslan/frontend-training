@@ -1,61 +1,64 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
+import { countryStore } from "../stores/countryStore";
+import { CountryDetails } from "./countryTypes";
 
-export interface ICountryTable {
-  name: string;
-  common: string;
-  population: string;
-  region: string;
-  capital: string;
-  flags: any;
-  currency: string;
-}
+export const CountryTable = (props: CountryDetails) => {
 
-export const CountryTable = (props: ICountryTable) => {
-  const { name, common, population, region, capital, flags, currency } = props;
-
-  const [countries1, setCountries1] = useState([]);
+  const [countries, setCountries] = useState([]);
 
   const fetchCountryData = async () => {
-    const response = await fetch("https://restcountries.com/v3.1/all");
-    const countries1 = await response.json();
-    setCountries1(countries1);
-    console.log(countries1);
+    setCountries(countryStore.countryDetailsData as any);
   };
 
   useEffect(() => {
+    (async ()=>{
+      await countryStore.fetchCountryData()
     fetchCountryData();
+    })(); // () - IIFE
+
   }, []);
 
   return (
     <>
-      {countries1.map((country1: any) => {
-        const { name, common, population, region, capital, flags, currency } = country1;
+      {countries.map((country: any, index: number) => {
+        const { name, common, population, region, capital, flags} = country;
 
         return (
           <div>
-            <table>
-              <thead>
-                <tr>
-                  <th className="px-4 py-2"> </th>
-                  <th className="px-4 py-2">Population</th>
-                  <th className="px-4 py-2">Region</th>
-                  <th className="px-4 py-2">Capital</th>
-                  <th className="px-4 py-2">Country</th>
-                  <th className="px-4 py-2">Currency</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td className="border px-4 py-2"><img className='h-[25px] w-[50px] object-cover rounded-lg' src={flags.png} alt={common} /></td>
-                  <td className="border px-4 py-2">{population}</td>
-                  <td className="border px-4 py-2">{region}</td>
-                  <td className="border px-4 py-2">{capital}</td>
-                  <td className="border px-4 py-2">{name.common}</td>
-                  <td className="border px-4 py-2">{currency}</td>
-                </tr>
-              </tbody>
-            </table>
+            <div className="w-full">
+              <div>
+              <table className="table-fixed border-b w-full text-left">
+                { index === 0 && <thead className="bg-black text-white h-4">
+                  <tr>
+                    <th></th>
+                    <th>Population</th>
+                    <th>Region</th>
+                    <th>Capital</th>
+                    <th>Country</th>
+                    <th>Currency</th>
+                  </tr>
+                </thead>}
+                <tbody className="align-middle">
+                  <tr>
+                    <td className="p-4 w-200">
+                      <img
+                        className="h-[50px] w-[100px] object-cover rounded-lg"
+                        src={flags.png}
+                        alt={common}
+                      />
+                    </td>
+                    <td>{population}</td>
+                    <td>{region}</td>
+                    <td>{capital}</td>
+                    <td>{name.common}</td>
+                    <td>Currency</td>
+                  </tr>
+                </tbody>
+              </table>
+              </div>
+              
+            </div>
           </div>
         );
       })}
